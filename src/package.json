@@ -1,0 +1,5 @@
+{
+  "devDependencies": {
+    "vuejs-pagination": "^1.1.2"
+  }
+}

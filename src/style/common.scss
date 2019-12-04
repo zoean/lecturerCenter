@@ -1,0 +1,90 @@
+body, div, span, header, footer, nav, section, aside, article, ul, dl, dt, dd, li, a, p, h1, h2, h3, h4,h5, i, b, textarea, button, input, select  {
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    font-style: normal;
+    text-decoration: none;
+    border: none;
+    color: #313131;
+    box-sizing: border-box;
+    font-weight: lighter;
+    font-family: 'Microsoft YaHei';
+    -webkit-tap-highlight-color:transparent;
+    &:focus {
+        outline: none;
+    }
+}
+
+input:-webkit-autofill {
+    background-color: #fff;
+    background-image: none;
+}
+
+.clear:after{
+    content: '';
+    display: block;
+    clear: both;
+}
+.clear{
+    zoom:1;
+}
+
+.back_img{
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+}
+
+.margin{
+    margin: 0 auto;
+}
+
+.left{
+    float: left;
+}
+
+.right{
+    float:right;
+}
+
+.hide{
+    display: none;
+}
+
+.show{
+    display: block;
+}
+
+@mixin opacity($num:0.5) {
+      filter:alpha(opacity=$num*100);
+      -moz-opacity:$num;
+      -khtml-opacity: $num;
+      opacity: $num;
+}
+@mixin basefont($size:12px,$lh:14px,$col:#333,$way:left){
+    font-size: $size;
+    line-height: $lh;
+    color: $col;
+    text-align: $way;
+}
+@mixin basebox($width,$height,$bac:none,$border:none,$re:0px){
+    width: $width;
+    height: $height;
+    border: $border;/*no*/
+    background:$bac;
+    border-radius: $re;
+}
+@mixin ieauto($wid) {
+    left:50%;
+    margin-left:-$wid/2;
+}
+@mixin iecenter($wid,$hei) {
+    left:50%;
+    top: 50%;
+    margin-left:-$wid/2;
+    margin-top:-$hei/2;
+}
+.btn{
+    @include basebox(100px, 34px, #4d9dfc, none, 5px);
+    @include basefont(16px, 34px, #fff, center);
+    cursor: pointer;
+}

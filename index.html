@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>个人中心</title>
+  <script type="text/javascript" src="//p.ggcj.cn/resource/js/jquery-1.7.2/jquery-1.7.2.min.js"></script>
+  <link href="/static/css/index.css" rel="stylesheet" type="text/css">
+  <script type="text/javascript" src="//p.ggcj.cn/public/js/common.js?20190722"></script>
+  <link rel="stylesheet" href="//p.ggcj.cn/resource/aliyun/aliplayer-min.css" />
+
+</head>
+
+<body>
+  <!-- 右侧悬浮-Begin -->
+  <script src="//p.ggcj.cn/public/js/right_suspension.html.js"></script>
+  <!--右侧悬浮-End-->
+
+  <!--header-Begin-->
+  <div id="header">
+    <!-- top-Begin -->
+    <script src="//p.ggcj.cn/public/js/top.html.js"></script>
+    <!-- top-End -->
+    <!-- head-Begin -->
+    <script src="//p.ggcj.cn/public/js/header.html.js"></script>
+    <!--head-End-->
+  </div>
+  <!--header-End-->
+  <div id="app">
+    <div id="cn">
+      <div class="grzx_title">个人中心</div>
+      <div id="left_nav">
+        <h2>财富中心</h2>
+        <ul style="display: none;">
+          <li><a id="caifuxinxi"
+              href="javascript:chgMenu('//user.' + getMainHost() + '/fortune/account.html', 'caifuxinxi', '473');">财富信息</a>
+          </li>
+          <li class="last_li"><a id="xiaofei-caifu"
+              href="javascript:chgMenu('//user.' + getMainHost() + '/fortune/account_detail.html', 'xiaofei-caifu', '473');">消费记录</a>
+          </li>
+        </ul>
+        <h2>安全中心</h2>
+        <ul style="display: none;">
+          <li><a id="mima_xiugaimima"
+              href="javascript:chgMenu('//user.' + getMainHost() + '/securityCenter/userCenter/modifyPassword.html', 'mima_xiugaimima', '438');">修改密码</a>
+          </li>
+          <li><a id="mima_bangdingshouji"
+              href="javascript:chgMenu('//user.' + getMainHost() + '/securityCenter/userCenter/telephoneBind.html', 'mima_bangdingshouji', '518');">绑定手机</a>
+          </li>
+          <li class="last_li"><a id="mima_mibaowenti"
+              href="javascript:chgMenu('//passport.' + getMainHost() + '/securityCentre/passwordProtectBind.html', 'mima_mibaowenti', '512');">密保问题</a>
+          </li>
+        </ul>
+        <h2 id="telegraph-title" style="display: none;">消息提醒</h2>
+        <ul style="display: none;" id="telegraph">
+
+        </ul>
+      </div>
+      <div class="right_iframe">
+        <router-view style="min-height: 600px;" />
+      </div>
+    </div>
+  </div>
+  <script>
+    $(function () {
+      var box = $('<div id="iframeBox"></div>')
+      $('body').append(box)
+      //图文讲师（后台未返回Data,所以不做合并）
+      $('#iframeBox').append("<iframe src=\"//adminitlb." + getMainHost() +
+        "/itlb/ulecturer/tMenu.html\" scrolling=\"no\" width=\"0\" height=\"0\" frameborder=\"0\"><\/iframe>");
+      //我的收益
+      $('#iframeBox').append("<iframe src=\"//settlement." + getMainHost() +
+        "/user/account/mentorMenu.html\" scrolling=\"no\" width=\"0\" height=\"0\" frameborder=\"0\"><\/iframe>"
+      );
+      //企业版房间
+      var qyfj = '<h2>企业版房间</h2>' +
+      "<ul style='display: none;'>" +
+      '<li><a id=\"roominfo\" href=\"javascript:chgMenu(\'//user.\'+ getMainHost() + \'/room/shop/index.html\', \'roominfo\', \'1024\');\">房间管理</a></li>' +
+      '<li><a id=\"roomorder\" href=\"javascript:chgMenu(\'//user.\'+ getMainHost() + \'/room/shop/add.html\', \'roomorder\', \'1024\');\">订单管理</a></li></ul>'
+      $('#left_nav').append(qyfj)
+      //凤凰问答
+      $.ajax({
+			  type: 'POST',
+			  url:"/futures/livelecturer/hasPower.fhqh?type=4",
+			  dataType: "json",
+			  success: function(json){
+				  if (json.state == 0&&json.content) {
+					  var fhwd = '<h2>凤凰问答</h2>'+
+              '<ul style="display: none;">'+
+              '<li class=last_li><a id=\"answer_list\" href="javascript:chgMenu(\'//user.\' + getMainHost() + \'/fhwd/answer_list.html\', \'answer_list\', \'512\');">问答列表</a></li>'+
+              '</ul>';
+            $('#left_nav').append(fhwd)
+				  }
+			  }
+		  });
+      $.ajax({
+        url: '/lecturer/getLecAuth.wp',
+        type: 'POST',
+        dataType: 'json',
+        success: function (data) {
+          if (data.state == 0) {
+            if (data.obj.isRoomManager == 1) {
+              //讲师认证申请
+              $('#iframeBox').append("<iframe src=\"//auth." + getMainHost() +
+                "/lecturer/userCenter/lecturerMenu.html\" scrolling=\"no\" width=\"0\" height=\"0\" frameborder=\"0\"><\/iframe>"
+              );
+            }
+            try{
+              $.each(data.obj.services, function (i, obj) {
+              switch (obj.serviceId) {
+                case 1: //我的图文
+                  $('#iframeBox').append("<iframe src=\"//tuwen." + getMainHost() +
+                    "/user/menu.html\" scrolling=\"no\" width=\"0\" height=\"0\" frameborder=\"0\"><\/iframe>"
+                  );
+                  break;
+                case 2: //问答
+                  break;
+                case 3: //视频讲师--拜师
+                  break;
+                case 4: //直播
+                  break;
+                case 5: //视频
+                  var videoHtml = '<h2>我的视频</h2>' +
+                    '<ul style="display: none;">' +
+                    '<li><a id="recording" href="javascript:chgMenu(\'/#/recording\', \'recording\', \'100%\');">直播录像</a></li>' +
+                    '<li><a id="video" href="javascript:chgMenu(\'/#/video\', \'video\', \'518\');" >视频管理</a></li>' +
+                    '<li><a id="album" href="javascript:chgMenu(\'/#/album\', \'album\', \'518\');" >视频专辑管理</a></li>' +
+                    '<li><a id="order" href="javascript:chgMenu(\'/#/albumOrder/order\', \'order\', \'518\');" >视频专辑订单</a></li>' +
+                    '</ul>';
+                  $('#left_nav').append(videoHtml);
+                  $('#telegraph').append(
+                    "<li><a id=\"audit\" href=\"javascript:chgMenu('/#/audit', 'audit', '100%');\">视频审核</a></li>"
+                  );
+                  $("#telegraph-title").show();
+                  break;
+                case 6: //投顾
+                  $('#iframeBox').append(
+                    "<iframe src=\"/investment/left_nav.html\" scrolling=\"no\" width=\"0\" height=\"0\" frameborder=\"0\"><\/iframe>"
+                  );
+                  break;
+                case 7: //音频
+                  var audioHtml = '<h2>我的音频</h2>' +
+                    '<ul style="display: none;">' +
+                    '<li><a id="audio" href="javascript:chgMenu(\'/#/audio\', \'audio\', \'100%\');">音频管理</a></li>' +
+                    '<li><a id="audioalbum" href="javascript:chgMenu(\'/#/audioalbum\', \'audioalbum\', \'100%\');">音频专辑列表</a></li>' +
+                    '<li><a id="audioOrder" href="javascript:chgMenu(\'/#/audioOrder/order\', \'audioOrder\', \'100%\');">音频专辑订单</a></li>' +
+                    '</ul>';
+                  $('#left_nav').append(audioHtml);
+                  break;
+              }
+            })
+            }catch(err){
+              
+            }
+            $('#iframeBox').css('display', 'none')
+            initLeftMenuClick();
+          }
+        }
+      })
+    })
+
+  </script>
+  <script src="//p.ggcj.cn/public/js/footer.html.js"></script>
+  <!-- built files will be auto injected -->
+  <script src="/static/js/index.js"></script>
+	<script src="//p.ggcj.cn/resource/js/es6-promise.min.js"></script><!--ES6-promiseIE10及以下失效 -->
+	<script src="//p.ggcj.cn/resource/aliyun/aliyun-oss-sdk-5.2.0.min.js"></script>
+	<script src="//p.ggcj.cn/resource/aliyun/aliyun-upload-sdk-1.4.0.min.js"></script>
+</body>
+
+</html>
